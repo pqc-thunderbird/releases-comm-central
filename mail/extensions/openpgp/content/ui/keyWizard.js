@@ -512,13 +512,54 @@ function onExpirationChange(event) {
 }
 
 /**
+ * Updates the info what certificate is created with the current settings
+ */
+function updateCertInfo() {
+  keyType = document.getElementById("keyType").value;
+  switch(keyType)
+  {
+    case "RSA":
+      let bits = document.getElementById("keySize").value;
+      document.getElementById("openpgpVersion").value = "v4";
+      document.getElementById("primaryKey").value = "RSA-" + bits;
+      document.getElementById("encryptionSubkey").value = "RSA-" + bits;
+      document.getElementById("encryptionSubkey2").hidden = true;
+      document.getElementById("encryptionSubkey2Label").hidden = true;
+      break;
+    case "ECC":
+      document.getElementById("openpgpVersion").value = "v4";
+      document.getElementById("primaryKey").value = "Ed25519";
+      document.getElementById("encryptionSubkey").value = "X25519";
+      document.getElementById("encryptionSubkey2").hidden = true;
+      document.getElementById("encryptionSubkey2Label").hidden = true;
+      break;
+    case "PQC":
+      document.getElementById("openpgpVersion").value = "v6";
+      document.getElementById("primaryKey").value = "ML-DSA-65 + Ed25519";
+      document.getElementById("encryptionSubkey").value = "ML-KEM-768 + X25519";
+      document.getElementById("encryptionSubkey2").hidden = true;
+      document.getElementById("encryptionSubkey2Label").hidden = true;
+      break;
+    case "PQC_Backw":
+      document.getElementById("openpgpVersion").value = "v4";
+      document.getElementById("primaryKey").value = "Ed25519";
+      document.getElementById("encryptionSubkey").value = "X25519";
+      document.getElementById("encryptionSubkey2").value = "ML-KEM-768 + X25519";
+      document.getElementById("encryptionSubkey2").hidden = false;
+      document.getElementById("encryptionSubkey2Label").hidden = false;
+      break;
+  }
+}
+
+/**
  * Enable or disable the #keySize input field based on the current selection of
  * the #keyType radio group.
  *
  * @param {Event} event - The DOM Event.
  */
 function onKeyTypeChange(event) {
-  document.getElementById("keySize").disabled = event.target.value == "ECC";
+  document.getElementById("keySize").disabled = event.target.value != "RSA";
+  updateCertInfo();
 }
 
 /**

@@ -2306,6 +2306,9 @@ var RNP = {
     const primaryKeyCurve = null;
     let subKeyCurve = null;
     let expireSeconds = 0;
+    let hashAlg;
+    let OpenPGPVersion = 4;
+    let additionalV4PQCSubkey = false;
 
     if (keyType == "RSA") {
       primaryKeyType = subKeyType = "rsa";
@@ -2314,6 +2317,16 @@ var RNP = {
       primaryKeyType = "eddsa";
       subKeyType = "ecdh";
       subKeyCurve = "Curve25519";
+    } else if (keyType == "PQC") {
+      primaryKeyType = "mldsa65_ed25519";
+      subKeyType = "mlkem768_x25519";
+      hashAlg = "SHA3-256"
+      OpenPGPVersion = 6;
+    } else if (keyType == "PQC_Backw") {
+      primaryKeyType = "eddsa";
+      subKeyType = "ecdh";
+      subKeyCurve = "Curve25519";
+      additionalV4PQCSubkey = true;
     } else {
       return null;
     }
@@ -2351,6 +2364,18 @@ var RNP = {
       }
     }
 
+    if (hashAlg != null) {
+      if (RNPLib.rnp_op_generate_set_hash(genOp, hashAlg)) {
+        throw new Error("rnp_op_generate_set_hash primary failed");
+      }
+    }
+
+    if (OpenPGPVersion == 6) {
+      if (RNPLib.rnp_op_generate_set_v6_key(genOp)) {
+        throw new Error("rnp_op_generate_set_v6_key primary failed");
+      }
+    }
+
     if (RNPLib.rnp_op_generate_set_expiration(genOp, expireSeconds)) {
       throw new Error("rnp_op_generate_set_expiration primary failed");
     }
@@ -2364,10 +2389,9 @@ var RNP = {
       throw new Error("rnp_op_generate_get_key primary failed");
     }
 
-    RNPLib.rnp_op_generate_destroy(genOp);
-
     newKeyFingerprint = this.getFingerprintFromHandle(primaryKey);
     newKeyId = this.getKeyIDFromHandle(primaryKey);
+    RNPLib.rnp_op_generate_destroy(genOp);
 
     if (
       RNPLib.rnp_op_generate_subkey_create(
@@ -2398,6 +2422,12 @@ var RNP = {
       }
     }
 
+    if (OpenPGPVersion == 6) {
+      if (RNPLib.rnp_op_generate_set_v6_key(genOp)) {
+        throw new Error("rnp_op_generate_set_v6_key primary failed");
+      }
+    }
+
     if (RNPLib.rnp_op_generate_set_expiration(genOp, expireSeconds)) {
       throw new Error("rnp_op_generate_set_expiration sub failed");
     }
@@ -2421,6 +2451,51 @@ var RNP = {
     }
 
     RNPLib.rnp_op_generate_destroy(genOp);
+
+    /* generate an additional v4 ML-KEM + ECDH Key */
+    if(additionalV4PQCSubkey)
+    {
+      if (
+        RNPLib.rnp_op_generate_subkey_create(
+          genOp.address(),
+          RNPLib.ffi,
+          primaryKey,
+          "mlkem768_x25519"
+        )
+      ) {
+        throw new Error("rnp_op_generate_subkey_create primary failed");
+      }
+
+      if (passphrase != null && passphrase.length != 0) {
+        if (RNPLib.rnp_op_generate_set_protection_password(genOp, passphrase)) {
+          throw new Error("rnp_op_generate_set_protection_password failed");
+        }
+      }
+
+      if (RNPLib.rnp_op_generate_set_expiration(genOp, expireSeconds)) {
+        throw new Error("rnp_op_generate_set_expiration sub failed");
+      }
+
+      let unlocked = false;
+      try {
+        if (passphrase != null && passphrase.length != 0) {
+          if (RNPLib.rnp_key_unlock(primaryKey, passphrase)) {
+            throw new Error("rnp_key_unlock failed");
+          }
+          unlocked = true;
+        }
+
+        if (RNPLib.rnp_op_generate_execute(genOp)) {
+          throw new Error("rnp_op_generate_execute sub failed");
+        }
+      } finally {
+        if (unlocked) {
+          RNPLib.rnp_key_lock(primaryKey);
+        }
+      }
+      RNPLib.rnp_op_generate_destroy(genOp);
+    }
+
     RNPLib.rnp_key_handle_destroy(primaryKey);
 
     await lazy.PgpSqliteDb2.acceptAsPersonalKey(newKeyFingerprint);

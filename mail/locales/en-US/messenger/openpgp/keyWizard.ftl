@@ -62,6 +62,18 @@ openpgp-keygen-months-label =
 openpgp-keygen-years-label =
     .label = years
 
+openpgp-keygen-details-title = OpenPGP Certificate Details
+openpgp-keygen-details-primary-key =
+    .value = Primary Key:
+openpgp-keygen-details-enc-subkey =
+    .value = Encryption Subkey:
+openpgp-keygen-details-enc-subkey2 =
+    .value = Encryption Subkey 2:
+openpgp-keygen-details-version =
+    .value = OpenPGP Key Version:
+
+openpgp-keygen-key-details-description = This will create a certificate with the following keys.
+
 openpgp-keygen-advanced-title = Advanced settings
 
 openpgp-keygen-advanced-description = Control the advanced settings of your OpenPGP Key.
@@ -74,11 +86,41 @@ openpgp-keygen-keysize =
     .value = Key size:
     .accesskey = s
 
+openpgp-keygen-info-v4 =
+    .label = This generates a OpenPGP v4 (old) certificate
+
+openpgp-keygen-info-v6 =
+    .label = This generates a OpenPGP v6 certificate
+
+openpgp-keygen-alg-rsa =
+    .label = RSA
+
+openpgp-keygen-alg-ecdsa =
+    .label = ECDSA
+
+openpgp-keygen-alg-eddsa =
+    .label = EdDSA
+
+openpgp-keygen-alg-mldsa-ecc =
+    .label = ML-DSA + ECC
+
+openpgp-keygen-alg-mlkem-ecc =
+    .label = ML-KEM + ECC
+
+openpgp-keygen-alg-slhdsa =
+    .label = SLH-DSA
+
 openpgp-keygen-type-rsa =
     .label = RSA
 
 openpgp-keygen-type-ecc =
     .label = ECC (Elliptic Curve)
+
+openpgp-keygen-type-pqc =
+    .label = PQC (Post Quantum)
+
+openpgp-keygen-type-pqc-backw =
+    .label = PQC (Post Quantum, backwards compatible)
 
 openpgp-keygen-button = Generate key
 

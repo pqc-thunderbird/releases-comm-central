@@ -322,6 +322,18 @@
                     data-l10n-id="openpgp-keygen-type-ecc"
                     oncommand="onKeyTypeChange(event);"
                   />
+                  <menuitem
+                    id="keyType_PQC"
+                    value="PQC"
+                    data-l10n-id="openpgp-keygen-type-pqc"
+                    oncommand="onKeyTypeChange(event);"
+                  />
+                  <menuitem
+                    id="keyType_PQC_Backw"
+                    value="PQC_Backw"
+                    data-l10n-id="openpgp-keygen-type-pqc-backw"
+                    oncommand="onKeyTypeChange(event);"
+                  />
                 </menupopup>
               </menulist>
             </hbox>
@@ -338,8 +350,9 @@
                     value="3072"
                     label="3072"
                     selected="true"
+                    oncommand="updateCertInfo();"
                   />
-                  <menuitem id="keySize_4096" value="4096" label="4096" />
+                  <menuitem id="keySize_4096" value="4096" label="4096" oncommand="updateCertInfo();" />
                 </menupopup>
               </menulist>
             </hbox>
@@ -347,6 +360,39 @@
           </vbox>
         </html:fieldset>
       </html:div>
+
+      <separator />
+
+      <description data-l10n-id="openpgp-keygen-key-details-description" />
+      <vbox class="indent grid-size">
+        <hbox align="center">
+          <label for="openpgpVersion" data-l10n-id="openpgp-keygen-details-version" />
+        </hbox>
+        <hbox>
+          <span style="margin-left:5px"><description id="openpgpVersion" value="v4" /></span>
+        </hbox>
+        <spacer />
+        <hbox align="center">
+          <label for="primaryKey" data-l10n-id="openpgp-keygen-details-primary-key" />
+        </hbox>
+        <hbox>
+          <span style="margin-left:5px"><description id="primaryKey" value="RSA-3072" /></span>
+        </hbox>
+        <spacer />
+        <hbox align="center">
+          <label for="encryptionSubkey" data-l10n-id="openpgp-keygen-details-enc-subkey" />
+        </hbox>
+        <hbox>
+          <span style="margin-left:5px"><description id="encryptionSubkey" value="RSA-3072" /></span>
+        </hbox>
+        <spacer />
+        <hbox align="center">
+          <label for="encryptionSubkey2" id="encryptionSubkey2Label" data-l10n-id="openpgp-keygen-details-enc-subkey2" hidden="true" />
+        </hbox>
+        <hbox>
+          <span style="margin-left:5px"><description id="encryptionSubkey2" hidden="true" /></span>
+        </hbox>
+      </vbox>
 
       <separator />
 
