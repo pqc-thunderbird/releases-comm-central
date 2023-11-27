@@ -238,3 +238,7 @@ rnp_version_minor
 rnp_version_patch
 rnp_version_string
 rnp_version_string_full
+rnp_op_generate_set_v6_key
+rnp_op_encrypt_enable_pkesk_v6
+rnp_op_generate_set_sphincsplus_param
+rnp_op_generate_set_hash

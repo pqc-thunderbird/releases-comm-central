@@ -614,7 +614,8 @@ const accessKeyBase = {
       actionFlag === lazy.EnigmailConstants.DOWNLOAD_KEY_NO_IMPORT
     ) {
       if (searchTerm.indexOf("0x") === 0) {
-        searchTerm = searchTerm.substr(0, 40);
+        //searchTerm = searchTerm.substr(0, 40);
+        searchTerm = searchTerm.substr(0, searchTerm.length - 2);
       }
       url +=
         "lookup.json?key_fingerprint=" +
@@ -1011,9 +1012,11 @@ const accessVksServer = {
             searchTerm.search(/^[A-F0-9]+$/) === 0
           ) {
             lookup = "/vks/v1/by-keyid/" + searchTerm;
-          } else if (
+          } else if ((
             searchTerm.length == 40 &&
-            searchTerm.search(/^[A-F0-9]+$/) === 0
+            searchTerm.search(/^[A-F0-9]+$/) === 0)
+            || (searchTerm.length == 64 &&
+            searchTerm.search(/^[A-F0-9]+$/) === 0)
           ) {
             lookup = "/vks/v1/by-fingerprint/" + searchTerm;
           }

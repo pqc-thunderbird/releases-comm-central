@@ -3179,7 +3179,7 @@ var RNP = {
     let type = null;
     if (id.length == 16) {
       type = "keyid";
-    } else if (id.length == 40 || id.length == 32) {
+    } else if (id.length == 64 || id.length == 40 || id.length == 32) {
       type = "fingerprint";
     } else {
       throw new Error("key/fingerprint identifier of unexpected length: " + id);

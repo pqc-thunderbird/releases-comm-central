@@ -1293,6 +1293,35 @@ var gKeyListView = {
         fpr = searchTxt;
       }
     }
+    // search for V6 fingerprints analogously */
+    if (searchTxt.length == 78) {
+      // possible fingerprint with spaces?
+      if (
+        searchTxt.search(/^[0-9a-f ]*$/) >= 0 &&
+        searchTxt[4] == " " &&
+        searchTxt[9] == " " &&
+        searchTxt[14] == " " &&
+        searchTxt[19] == " " &&
+        searchTxt[24] == " " &&
+        searchTxt[29] == " " &&
+        searchTxt[34] == " " &&
+        searchTxt[39] == " " &&
+        searchTxt[44] == " " &&
+        searchTxt[49] == " " &&
+        searchTxt[54] == " " &&
+        searchTxt[59] == " " &&
+        searchTxt[64] == " " &&
+        searchTxt[69] == " " &&
+        searchTxt[74] == " "
+      ) {
+        fpr = searchTxt.replace(/ /g, "");
+      }
+    } else if (searchTxt.length == 64) {
+      // possible fingerprint without spaces
+      if (searchTxt.search(/^[0-9a-f ]*$/) >= 0) {
+        fpr = searchTxt;
+      }
+    }
 
     const keyShowList = [];
 

@@ -1322,6 +1322,14 @@ function enableRNPLibJS() {
       ctypes.char.ptr
     ),
 
+    rnp_op_generate_set_hash: librnp.declare(
+      "rnp_op_generate_set_hash",
+      abi,
+      rnp_result_t,
+      rnp_op_generate_t,
+      ctypes.char.ptr
+    ),
+
     rnp_op_generate_set_protection_password: librnp.declare(
       "rnp_op_generate_set_protection_password",
       abi,
@@ -2012,6 +2020,13 @@ function enableRNPLibJS() {
       rnp_result_t,
       rnp_op_encrypt_t,
       ctypes.uint32_t
+    ),
+
+    rnp_op_generate_set_v6_key: librnp.declare(
+      "rnp_op_generate_set_v6_key",
+      abi,
+      rnp_result_t,
+      rnp_op_generate_t
     ),
 
     rnp_result_t,

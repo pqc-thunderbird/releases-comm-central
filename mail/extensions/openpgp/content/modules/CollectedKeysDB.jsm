@@ -103,7 +103,7 @@ class CollectedKeysDB {
    * @param {CollectedKey} key - the key to store.
    */
   async storeKey(key) {
-    if (key.fingerprint?.length != 40) {
+    if ((key.fingerprint?.length != 40) && (key.fingerprint?.length != 64)) {
       throw new Error(`Invalid fingerprint: ${key.fingerprint}`);
     }
     return new Promise((resolve, reject) => {
@@ -133,7 +133,7 @@ class CollectedKeysDB {
    * @returns {CollectedKey} the key found, or null.
    */
   async findKeyForFingerprint(fingerprint) {
-    if (fingerprint?.length != 40) {
+    if ((fingerprint?.length != 40) || (fingerprint?.length != 64)) {
       throw new Error(`Invalid fingerprint: ${fingerprint}`);
     }
     return new Promise((resolve, reject) => {
@@ -297,7 +297,7 @@ class CollectedKeysDB {
    * @param {string} fingerprint - fingerprint of key to delete.
    */
   async deleteKey(fingerprint) {
-    if (fingerprint.length != 40) {
+    if (fingerprint.length != 40 && fingerprint.length != 64) {
       throw new Error(`Invalid fingerprint: ${fingerprint}`);
     }
     return new Promise((resolve, reject) => {

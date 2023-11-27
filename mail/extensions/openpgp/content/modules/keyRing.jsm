@@ -105,7 +105,7 @@ var EnigmailKeyRing = {
    * get 1st key object that matches a given key ID or subkey ID
    *
    * @param keyId      - String: key Id with 16 characters (preferred) or 8 characters),
-   *                             or fingerprint (40 or 32 characters).
+   *                             or fingerprint (64, 40 or 32 characters).
    *                             Optionally preceded with "0x"
    * @param noLoadKeys - Boolean [optional]: do not try to load the key list first
    *

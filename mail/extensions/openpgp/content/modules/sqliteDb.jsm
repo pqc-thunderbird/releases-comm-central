@@ -69,7 +69,8 @@ var PgpSqliteDb2 = {
 
   async getFingerprintAcceptance(conn, fingerprint) {
     // 40 is for modern fingerprints, 32 for older fingerprints.
-    if (fingerprint.length != 40 && fingerprint.length != 32) {
+    // 64 is for OpenPGP V6 fingerprints (32 bytes, 64 HEX chars)
+    if (fingerprint.length != 40 && fingerprint.length != 32 && fingerprint.length != 64) {
       throw new Error(
         "internal error, invalid fingerprint value: " + fingerprint
       );

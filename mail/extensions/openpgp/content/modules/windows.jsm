@@ -384,7 +384,7 @@ var EnigmailWindows = {
         .replace(/\s+$/, ""); // trim spaces
       // special handling to convert fingerprints with spaces into fingerprint without spaces
       if (
-        searchval.length == 49 &&
+        (searchval.length == 49 &&
         searchval.match(/^[0-9a-fA-F ]*$/) &&
         searchval[4] == " " &&
         searchval[9] == " " &&
@@ -394,10 +394,30 @@ var EnigmailWindows = {
         searchval[29] == " " &&
         searchval[34] == " " &&
         searchval[39] == " " &&
-        searchval[44] == " "
+        searchval[44] == " ")
+      ||
+        (searchval.length == 78 &&
+        searchval.match(/^[0-9a-fA-F ]*$/) &&
+        searchval[4] == " " &&
+        searchval[9] == " " &&
+        searchval[14] == " " &&
+        searchval[19] == " " &&
+        searchval[24] == " " &&
+        searchval[29] == " " &&
+        searchval[34] == " " &&
+        searchval[39] == " " &&
+        searchval[44] == " " &&
+        searchval[49] == " " &&
+        searchval[54] == " " &&
+        searchval[59] == " " &&
+        searchval[64] == " " &&
+        searchval[69] == " " &&
+        searchval[74] == " ")
       ) {
         inputObj.searchList = ["0x" + searchval.replace(/ /g, "")];
       } else if (searchval.length == 40 && searchval.match(/^[0-9a-fA-F ]*$/)) {
+        inputObj.searchList = ["0x" + searchval];
+      } else if (searchval.length == 64 && searchval.match(/^[0-9a-fA-F ]*$/)) {
         inputObj.searchList = ["0x" + searchval];
       } else if (searchval.length == 8 && searchval.match(/^[0-9a-fA-F]*$/)) {
         // special handling to add the required leading 0x when searching for keys
