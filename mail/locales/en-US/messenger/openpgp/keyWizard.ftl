@@ -122,6 +122,10 @@ openpgp-keygen-type-pqc =
 openpgp-keygen-type-pqc-backw =
     .label = PQC (Post Quantum, backwards compatible)
 
+
+openpgp-pqc-key-info = This choice will generate a pure quantum computer resistant OpenPGP key. Other mail users whose client software does not yet support PQC will not be able to send encrypted e-mails to you based on this key. They will also not be able to verify your signatures.
+openpgp-pqc-backw-key-info = This choice will generate an OpenPGP key where the primary signature key and one encryption subkey are using traditional cryptographic schemes (that are not quantum computer resistant). It further features a quantum computer resistant encryption subkey. Such a key allows other mail users to send you e-mails that are either encrypted tradionally or with a quantum computer resistant algorithm. All e-mail users will also in principle be able to verify your signatures.
+
 openpgp-keygen-button = Generate key
 
 openpgp-keygen-progress-title = Generating your new OpenPGP Key…

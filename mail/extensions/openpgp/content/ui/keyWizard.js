@@ -525,6 +525,8 @@ function updateCertInfo() {
       document.getElementById("encryptionSubkey").value = "RSA-" + bits;
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+      document.getElementById("openpgp-pqc-key-info-box").hidden = true;
+      document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
       break;
     case "ECC":
       document.getElementById("openpgpVersion").value = "v4";
@@ -532,6 +534,8 @@ function updateCertInfo() {
       document.getElementById("encryptionSubkey").value = "X25519";
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+      document.getElementById("openpgp-pqc-key-info-box").hidden = true;
+      document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
       break;
     case "PQC":
       document.getElementById("openpgpVersion").value = "v6";
@@ -539,6 +543,8 @@ function updateCertInfo() {
       document.getElementById("encryptionSubkey").value = "ML-KEM-768 + X25519";
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+      document.getElementById("openpgp-pqc-key-info-box").hidden = false;
+      document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
       break;
     case "PQC_Backw":
       document.getElementById("openpgpVersion").value = "v4";
@@ -547,6 +553,8 @@ function updateCertInfo() {
       document.getElementById("encryptionSubkey2").value = "ML-KEM-768 + X25519";
       document.getElementById("encryptionSubkey2").hidden = false;
       document.getElementById("encryptionSubkey2Label").hidden = false;
+      document.getElementById("openpgp-pqc-key-info-box").hidden = true;
+      document.getElementById("openpgp-pqc-backw-key-info-box").hidden = false;
       break;
   }
 }
