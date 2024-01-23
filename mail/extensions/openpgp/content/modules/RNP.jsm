@@ -3334,6 +3334,25 @@ var RNP = {
     );
   },
 
+  isPQC(key) {
+    const allowed = new lazy.ctypes.bool();
+    if (RNPLib.rnp_key_allows_usage(key, usage, allowed.address())) {
+      throw new Error("rnp_key_allows_usage failed");
+    }
+    if (!allowed.value) {
+      return false;
+    }
+
+    if (usage != str_sign) {
+      return true;
+    }
+
+    return (
+      RNPLib.getSecretAvailableFromHandle(key) &&
+      RNPLib.isSecretKeyMaterialAvailable(key)
+    );
+  },
+
   getSuitableSubkey(primary, usage) {
     const sub_count = new lazy.ctypes.size_t();
     if (RNPLib.rnp_key_get_subkey_count(primary, sub_count.address())) {
@@ -3344,6 +3363,10 @@ var RNP = {
     // encrypt to the most recently created subkey. (Bug 1665281)
     let newest_created = null;
     let newest_handle = null;
+
+    // also try to find if we can use a PQC subkey
+    let newest_pqc_created = null;
+    let newest_pqc_handle = null;
 
     for (let i = 0; i < sub_count.value; i++) {
       let sub_handle = new RNPLib.rnp_key_handle_t();
@@ -3370,6 +3393,28 @@ var RNP = {
 
       if (!skip) {
         const created = this.getKeyCreatedValueFromHandle(sub_handle);
+
+        /* prioritize PQC over traditional encrpytion */
+        if(usage == str_encrypt && (!newest_pqc_handle || created > newest_pqc_handle))
+        {
+          const algo = new lazy.ctypes.char.ptr();
+          if (RNPLib.rnp_key_get_alg(sub_handle, algo.address())) {
+            throw new Error("rnp_key_get_alg failed");
+          }
+          /* currently there only are ML-KEM-* variants for PQC encryption */ 
+          if(algo.readString().startsWith("ML-KEM"))
+          {
+            if (newest_pqc_handle) {
+              RNPLib.rnp_key_handle_destroy(newest_pqc_handle);
+            }
+            newest_pqc_handle = sub_handle;
+            sub_handle = null;
+            newest_pqc_created = created;
+            continue;
+          }
+          RNPLib.rnp_buffer_destroy(algo);
+        }
+
         if (!newest_handle || created > newest_created) {
           if (newest_handle) {
             RNPLib.rnp_key_handle_destroy(newest_handle);
@@ -3383,6 +3428,12 @@ var RNP = {
       if (sub_handle) {
         RNPLib.rnp_key_handle_destroy(sub_handle);
       }
+    }
+
+    /* return found PQC encryption key if any */
+    if(usage == str_encrypt && newest_pqc_handle)
+    {
+      return newest_pqc_handle;
     }
 
     return newest_handle;
