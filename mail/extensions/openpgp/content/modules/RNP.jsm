@@ -2318,8 +2318,8 @@ var RNP = {
       subKeyType = "ecdh";
       subKeyCurve = "Curve25519";
     } else if (keyType == "PQC") {
-      primaryKeyType = "mldsa65_ed25519";
-      subKeyType = "mlkem768_x25519";
+      primaryKeyType = "ml-dsa-65+ed25519";
+      subKeyType = "ml-kem-768+x25519";
       hashAlg = "SHA3-256"
       OpenPGPVersion = 6;
     } else if (keyType == "PQC_Backw") {
@@ -2460,7 +2460,7 @@ var RNP = {
           genOp.address(),
           RNPLib.ffi,
           primaryKey,
-          "mlkem768_x25519"
+          "ml-kem-768+x25519"
         )
       ) {
         throw new Error("rnp_op_generate_subkey_create primary failed");
