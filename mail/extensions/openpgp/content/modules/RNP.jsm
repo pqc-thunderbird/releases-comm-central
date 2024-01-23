@@ -2295,10 +2295,15 @@ var RNP = {
     return result;
   },
 
-  async genKey(userId, keyType, keyBits, expiryDays, passphrase) {
+  async genKey(userId, keyType, securityLevel, expiryDays, passphrase) {
     let newKeyId = "";
     let newKeyFingerprint = "";
 
+    let keyBits = 3072;
+    if(securityLevel == "High") {
+      keyBits = 4096;
+    }
+    
     let primaryKeyType;
     let primaryKeyBits = 0;
     let subKeyType;

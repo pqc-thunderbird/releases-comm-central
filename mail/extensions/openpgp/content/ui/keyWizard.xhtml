@@ -340,19 +340,19 @@
             <spacer />
 
             <hbox align="center">
-              <label for="keySize" data-l10n-id="openpgp-keygen-keysize" />
+              <label for="securityLevel" data-l10n-id="openpgp-keygen-security-level" />
             </hbox>
             <hbox align="center">
-              <menulist id="keySize">
+              <menulist id="securityLevel">
                 <menupopup>
                   <menuitem
-                    id="keySize_3072"
-                    value="3072"
-                    label="3072"
+                    id="securityLevel_Standard"
+                    value="Standard"
+                    label="Standard"
                     selected="true"
                     oncommand="updateCertInfo();"
                   />
-                  <menuitem id="keySize_4096" value="4096" label="4096" oncommand="updateCertInfo();" />
+                  <menuitem id="securityLevel_High" value="High" label="High" oncommand="updateCertInfo();" />
                 </menupopup>
               </menulist>
             </hbox>
@@ -360,8 +360,6 @@
           </vbox>
         </html:fieldset>
       </html:div>
-
-      <separator />
 
       <description data-l10n-id="openpgp-keygen-key-details-description" />
       <vbox class="indent grid-size">

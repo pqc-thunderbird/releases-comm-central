@@ -82,8 +82,8 @@ openpgp-keygen-keytype =
     .value = Key type:
     .accesskey = t
 
-openpgp-keygen-keysize =
-    .value = Key size:
+openpgp-keygen-security-level =
+    .value = Security Level:
     .accesskey = s
 
 openpgp-keygen-info-v4 =

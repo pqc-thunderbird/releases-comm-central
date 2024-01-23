@@ -519,54 +519,82 @@ function updateCertInfo() {
   switch(keyType)
   {
     case "RSA":
-      let bits = document.getElementById("keySize").value;
+      /* change displayed certificate info */
+      let bits = 3072;
+      if(document.getElementById("securityLevel").value == "High") {
+        bits = 4096;
+      }
       document.getElementById("openpgpVersion").value = "v4";
       document.getElementById("primaryKey").value = "RSA-" + bits;
       document.getElementById("encryptionSubkey").value = "RSA-" + bits;
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+
+      /* additional PQC hints */
       document.getElementById("openpgp-pqc-key-info-box").hidden = true;
       document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
+
+      /* Security Level Selection */
+      document.getElementById("securityLevel_High").disabled = false;
       break;
     case "ECC":
+      /* change displayed certificate info */
       document.getElementById("openpgpVersion").value = "v4";
       document.getElementById("primaryKey").value = "Ed25519";
       document.getElementById("encryptionSubkey").value = "X25519";
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+      
+      /* additional PQC hints */
       document.getElementById("openpgp-pqc-key-info-box").hidden = true;
       document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
+
+      /* Security Level Selection */
+      document.getElementById("securityLevel_High").disabled = true;
+      document.getElementById("securityLevel").selectedIndex = 0;
       break;
     case "PQC":
+      /* change displayed certificate info */
       document.getElementById("openpgpVersion").value = "v6";
       document.getElementById("primaryKey").value = "ML-DSA-65 + Ed25519";
       document.getElementById("encryptionSubkey").value = "ML-KEM-768 + X25519";
       document.getElementById("encryptionSubkey2").hidden = true;
       document.getElementById("encryptionSubkey2Label").hidden = true;
+
+      /* additional PQC hints */
       document.getElementById("openpgp-pqc-key-info-box").hidden = false;
       document.getElementById("openpgp-pqc-backw-key-info-box").hidden = true;
+
+      /* Security Level Selection */
+      document.getElementById("securityLevel_High").disabled = true;
+      document.getElementById("securityLevel").selectedIndex = 0;
       break;
     case "PQC_Backw":
+      /* change displayed certificate info */
       document.getElementById("openpgpVersion").value = "v4";
       document.getElementById("primaryKey").value = "Ed25519";
       document.getElementById("encryptionSubkey").value = "X25519";
       document.getElementById("encryptionSubkey2").value = "ML-KEM-768 + X25519";
       document.getElementById("encryptionSubkey2").hidden = false;
       document.getElementById("encryptionSubkey2Label").hidden = false;
+      
+      /* additional PQC hints */
       document.getElementById("openpgp-pqc-key-info-box").hidden = true;
       document.getElementById("openpgp-pqc-backw-key-info-box").hidden = false;
+
+      /* Security Level Selection */
+      document.getElementById("securityLevel_High").disabled = true;
+      document.getElementById("securityLevel").selectedIndex = 0;
       break;
   }
 }
 
 /**
- * Enable or disable the #keySize input field based on the current selection of
- * the #keyType radio group.
+ * Update displayed info and choices based on the #keyType input
  *
  * @param {Event} event - The DOM Event.
  */
 function onKeyTypeChange(event) {
-  document.getElementById("keySize").disabled = event.target.value != "RSA";
   updateCertInfo();
 }
 
@@ -729,7 +757,7 @@ async function openPgpKeygenConfirm() {
   newId = await cApi.genKey(
     `${gIdentity.fullName} <${gIdentity.email}>`,
     document.getElementById("keyType").value,
-    Number(document.getElementById("keySize").value),
+    document.getElementById("securityLevel").value,
     document.getElementById("openPgpKeygeExpiry").value == 1
       ? 0
       : Number(document.getElementById("expireInput").value) *
