@@ -3334,25 +3334,6 @@ var RNP = {
     );
   },
 
-  isPQC(key) {
-    const allowed = new lazy.ctypes.bool();
-    if (RNPLib.rnp_key_allows_usage(key, usage, allowed.address())) {
-      throw new Error("rnp_key_allows_usage failed");
-    }
-    if (!allowed.value) {
-      return false;
-    }
-
-    if (usage != str_sign) {
-      return true;
-    }
-
-    return (
-      RNPLib.getSecretAvailableFromHandle(key) &&
-      RNPLib.isSecretKeyMaterialAvailable(key)
-    );
-  },
-
   getSuitableSubkey(primary, usage) {
     const sub_count = new lazy.ctypes.size_t();
     if (RNPLib.rnp_key_get_subkey_count(primary, sub_count.address())) {
@@ -3395,15 +3376,15 @@ var RNP = {
         const created = this.getKeyCreatedValueFromHandle(sub_handle);
 
         /* prioritize PQC over traditional encrpytion */
-        if(usage == str_encrypt && (!newest_pqc_handle || created > newest_pqc_handle))
-        {
+        if(usage == str_encrypt && (!newest_pqc_handle || created > newest_pqc_created)) {
           const algo = new lazy.ctypes.char.ptr();
           if (RNPLib.rnp_key_get_alg(sub_handle, algo.address())) {
             throw new Error("rnp_key_get_alg failed");
           }
+          const algoStr = algo.readString();
+          RNPLib.rnp_buffer_destroy(algo);
           /* currently there only are ML-KEM-* variants for PQC encryption */ 
-          if(algo.readString().startsWith("ML-KEM"))
-          {
+          if(algoStr.startsWith("ML-KEM")) {
             if (newest_pqc_handle) {
               RNPLib.rnp_key_handle_destroy(newest_pqc_handle);
             }
@@ -3412,9 +3393,7 @@ var RNP = {
             newest_pqc_created = created;
             continue;
           }
-          RNPLib.rnp_buffer_destroy(algo);
         }
-
         if (!newest_handle || created > newest_created) {
           if (newest_handle) {
             RNPLib.rnp_key_handle_destroy(newest_handle);
