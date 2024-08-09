@@ -2326,6 +2326,11 @@ var RNP = {
       primaryKeyType = "ml-dsa-65+ed25519";
       subKeyType = "ml-kem-768+x25519";
       hashAlg = "SHA3-256"
+      if(securityLevel == "High") {
+        primaryKeyType = "ml-dsa-87+ed448";
+        subKeyType = "ml-kem-1024+x448";
+        hashAlg = "SHA3-512"
+      }
       OpenPGPVersion = 6;
     } else if (keyType == "PQC_Backw") {
       primaryKeyType = "eddsa";
