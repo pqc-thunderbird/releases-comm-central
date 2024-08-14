@@ -578,9 +578,16 @@ function updateCertInfo() {
     case "PQC_Backw":
       /* change displayed certificate info */
       document.getElementById("openpgpVersion").value = "v4";
-      document.getElementById("primaryKey").value = "Ed25519";
-      document.getElementById("encryptionSubkey").value = "X25519";
-      document.getElementById("encryptionSubkey2").value = "ML-KEM-768 + X25519";
+      if(document.getElementById("securityLevel").value == "High") {
+        document.getElementById("primaryKey").value = "Ed448";
+        document.getElementById("encryptionSubkey").value = "X448";
+        document.getElementById("encryptionSubkey2").value = "ML-KEM-1024 + X448";
+      }
+      else {
+        document.getElementById("primaryKey").value = "Ed25519";
+        document.getElementById("encryptionSubkey").value = "X25519";
+        document.getElementById("encryptionSubkey2").value = "ML-KEM-768 + X25519";
+      }
       document.getElementById("encryptionSubkey2").hidden = false;
       document.getElementById("encryptionSubkey2Label").hidden = false;
       
@@ -589,8 +596,7 @@ function updateCertInfo() {
       document.getElementById("openpgp-pqc-backw-key-info-box").hidden = false;
 
       /* Security Level Selection */
-      document.getElementById("securityLevel_High").disabled = true;
-      document.getElementById("securityLevel").selectedIndex = 0;
+      document.getElementById("securityLevel_High").disabled = false;
       break;
   }
 }

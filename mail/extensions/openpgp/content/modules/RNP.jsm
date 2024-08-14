@@ -2314,6 +2314,7 @@ var RNP = {
     let hashAlg;
     let OpenPGPVersion = 4;
     let additionalV4PQCSubkey = false;
+    let additionalV4PQCSubkeyStr;
 
     if (keyType == "RSA") {
       primaryKeyType = subKeyType = "rsa";
@@ -2336,6 +2337,14 @@ var RNP = {
       primaryKeyType = "eddsa";
       subKeyType = "ecdh";
       subKeyCurve = "Curve25519";
+      additionalV4PQCSubkeyStr = "ml-kem-768+x25519"
+      if(securityLevel == "High") {
+        primaryKeyType = "ed448";
+        subKeyType = "x448";
+        subKeyCurve = null;
+        hashAlg = "SHA3-512"
+        additionalV4PQCSubkeyStr = "ml-kem-1024+x448"
+      }
       additionalV4PQCSubkey = true;
     } else {
       return null;
@@ -2465,12 +2474,13 @@ var RNP = {
     /* generate an additional v4 ML-KEM + ECDH Key */
     if(additionalV4PQCSubkey)
     {
+
       if (
         RNPLib.rnp_op_generate_subkey_create(
           genOp.address(),
           RNPLib.ffi,
           primaryKey,
-          "ml-kem-768+x25519"
+          additionalV4PQCSubkeyStr
         )
       ) {
         throw new Error("rnp_op_generate_subkey_create primary failed");
